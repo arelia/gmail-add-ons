@@ -52,5 +52,5 @@ function getExpenseDescription(message) {
  * @returns {String}
  */
 function getSheetUrl() {
-  return 'TODO';
+  return PropertiesService.getUserProperties().getProperty('SPREADSHEET_URL');
 }

@@ -94,6 +94,7 @@ function submitForm(e) {
       .openByUrl((res['Spreadsheet URL']))
       .getActiveSheet();
     sheet.appendRow(objToArray(res, FIELDNAMES.slice(0, FIELDNAMES.length - 1)));
+    PropertiesService.getUserProperties().setProperty('SPREADSHEET_URL', res['Spreadsheet URL']);
     return createExpensesCard(null, 'Logged expense successfully!').build();
   }
   catch (err) {
