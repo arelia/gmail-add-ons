@@ -35,7 +35,7 @@ function getContextualAddOn(event) {
 
 /**
  * Retrieves the current message given an action event object.
- * @param {Event} event Action event object
+ * @param {Event} event An action event object
  * @return {Message}
  */
 function getCurrentMessage(event) {

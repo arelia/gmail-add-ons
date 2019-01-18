@@ -1,3 +1,19 @@
+/**
+ * Copyright 2017 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 var FIELDNAMES = ['Date', 'Amount', 'Description', 'Spreadsheet URL'];
 
 /**
@@ -11,7 +27,7 @@ var FIELDNAMES = ['Date', 'Amount', 'Description', 'Spreadsheet URL'];
 function createExpensesCard(opt_prefills, opt_status) {
   var card = CardService.newCardBuilder();
   card.setHeader(CardService.newCardHeader().setTitle('Log Your Expense'));
-  
+
   if (opt_status) {
     if (opt_status.indexOf('Error: ') == 0) {
       opt_status = '<font color=\'#FF0000\'>' + opt_status + '</font>';
@@ -23,10 +39,11 @@ function createExpensesCard(opt_prefills, opt_status) {
       .setText('<b>' + opt_status + '</b>'));
     card.addSection(statusSection);
   }
-  
-  var formSection = createFormSection(CardService.newCardSection(), FIELDNAMES, opt_prefills);
+
+  var formSection = createFormSection(CardService.newCardSection(),
+                                      FIELDNAMES, opt_prefills);
   card.addSection(formSection);
-  
+
   return card;
 }
 
@@ -49,12 +66,12 @@ function createFormSection(section, inputNames, opt_prefills) {
     section.addWidget(widget);
   }
 
-  const submitForm = CardService.newAction().setFunctionName('submitForm');
-  const submitButton = CardService.newTextButton()
+  var submitForm = CardService.newAction().setFunctionName('submitForm');
+  var submitButton = CardService.newTextButton()
     .setText('Submit')
     .setOnClickAction(submitForm);
   section.addWidget(CardService.newButtonSet().addButton(submitButton));
-  
+
   return section;
 }
 
