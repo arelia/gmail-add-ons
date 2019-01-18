@@ -1,0 +1,19 @@
+{
+  "timeZone": "America/Chicago",
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/gmail.addons.execute",
+    "https://www.googleapis.com/auth/gmail.addons.current.message.readonly"
+  ],
+  "gmail": {
+    "version": "TRUSTED_TESTER_V2",
+    "name": "Expense It!",
+    "logoUrl": "https://www.gstatic.com/images/icons/material/system/1x/receipt_black_24dp.png",
+    "contextualTriggers": [{
+      "unconditional": {
+      },
+      "onTriggerFunction": "getContextualAddOn"
+    }],
+    "primaryColor": "#41f470",
+    "secondaryColor": "#94f441"
+  }
+}
