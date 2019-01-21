@@ -43,6 +43,7 @@ function createExpensesCard(opt_prefills, opt_status) {
   var formSection = createFormSection(CardService.newCardSection(),
                                       FIELDNAMES, opt_prefills);
   card.addSection(formSection);
+  card.addSection(newSheetSection();
 
   return card;
 }
@@ -70,7 +71,13 @@ function createFormSection(section, inputNames, opt_prefills) {
   var submitButton = CardService.newTextButton()
     .setText('Submit')
     .setOnClickAction(submitForm);
+
+  var clearButton = CardService.newTextButton()
+    .setText('Clear Form')
+    .setOnClickAction(clearForm);
+
   section.addWidget(CardService.newButtonSet().addButton(submitButton));
+  section.addWidget(CardService.newButtonSet().addButton(clearButton));
 
   return section;
 }
@@ -117,4 +124,30 @@ function objToArray(obj, keys) {
   return keys.map(function(key) {
     return obj[key];
   });
+}
+
+/**
+ * Recreates the main card without prefilled data.
+ *
+ * @param {Event} e An event object containing form inputs and parameters.
+ * @returns {Card}
+ */
+function clearForm(e) {
+  return createExpensesCard(null, e['parameters']['Status']).build();
+}
+
+function newsheetsection(card) {
+    var newSheetSection = CardService.newCardSection();
+var sheetName = CardService.newTextInput()
+  .setFieldName('Sheet Name')
+  .setTitle('Sheet Name');
+var createExpensesSheet = CardService.newAction()
+  .setFunctionName('createExpensesSheet');
+var newSheetButton = CardService.newTextButton()
+  .setText('New Sheet')
+  .setOnClickAction(createExpensesSheet);
+newSheetSection.addWidget(sheetName);
+newSheetSection.addWidget(CardService.newButtonSet().addButton(newSheetButton));
+
+return newSheetSection;
 }
