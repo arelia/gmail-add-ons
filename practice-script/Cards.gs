@@ -28,6 +28,14 @@ function createExpensesCard(opt_prefills, opt_status) {
   var card = CardService.newCardBuilder();
   card.setHeader(CardService.newCardHeader().setTitle('Log Your Expense'));
 
+  var clearForm = CardService.newAction()
+    .setFunctionName('clearForm')
+    .setParameters({'Status': opt_status ? opt_status : ''});
+  var clearAction = CardService.newCardAction()
+    .setText('Clear form')
+    .setOnClickAction(clearForm);
+  card.addCardAction(clearAction);
+
   if (opt_status) {
     if (opt_status.indexOf('Error: ') == 0) {
       opt_status = '<font color=\'#FF0000\'>' + opt_status + '</font>';
@@ -42,8 +50,21 @@ function createExpensesCard(opt_prefills, opt_status) {
 
   var formSection = createFormSection(CardService.newCardSection(),
                                       FIELDNAMES, opt_prefills);
+
+  var newSheetSection = CardService.newCardSection();
+  var sheetName = CardService.newTextInput()
+    .setFieldName('Sheet Name')
+    .setTitle('Sheet Name');
+  var createExpensesSheet = CardService.newAction()
+    .setFunctionName('createExpensesSheet');
+  var newSheetButton = CardService.newTextButton()
+    .setText('New Sheet')
+    .setOnClickAction(createExpensesSheet);
+  newSheetSection.addWidget(sheetName);
+  newSheetSection.addWidget(CardService.newButtonSet().addButton(newSheetButton));
+
   card.addSection(formSection);
-  card.addSection(newSheetSection();
+  card.addSection(newSheetSection);
 
   return card;
 }
@@ -71,13 +92,7 @@ function createFormSection(section, inputNames, opt_prefills) {
   var submitButton = CardService.newTextButton()
     .setText('Submit')
     .setOnClickAction(submitForm);
-
-  var clearButton = CardService.newTextButton()
-    .setText('Clear Form')
-    .setOnClickAction(clearForm);
-
   section.addWidget(CardService.newButtonSet().addButton(submitButton));
-  section.addWidget(CardService.newButtonSet().addButton(clearButton));
 
   return section;
 }
@@ -136,18 +151,23 @@ function clearForm(e) {
   return createExpensesCard(null, e['parameters']['Status']).build();
 }
 
-function newsheetsection(card) {
-    var newSheetSection = CardService.newCardSection();
-var sheetName = CardService.newTextInput()
-  .setFieldName('Sheet Name')
-  .setTitle('Sheet Name');
-var createExpensesSheet = CardService.newAction()
-  .setFunctionName('createExpensesSheet');
-var newSheetButton = CardService.newTextButton()
-  .setText('New Sheet')
-  .setOnClickAction(createExpensesSheet);
-newSheetSection.addWidget(sheetName);
-newSheetSection.addWidget(CardService.newButtonSet().addButton(newSheetButton));
-
-return newSheetSection;
+/**
+ * Creates a new spreadsheet for the user to log expenses.
+ *
+ * @param {Event} e An event object containing form inputs and parameters.
+ * @returns {Card}
+ */
+function createExpensesSheet(e) {
+  var res = e['formInput'];
+  var sheetName = res['Sheet Name'] ? res['Sheet Name'] : 'Expenses';
+  newSpreadsheet = SpreadsheetApp.create(sheetName);
+  newSpreadsheet.setFrozenRows(1);
+  newSpreadsheet
+    .getActiveSheet()
+    .getRange(1, 1, 1, FIELDNAMES.length - 1)
+    .setValues([FIELDNAMES.slice(0, FIELDNAMES.length - 1)]);
+  var prefills = objToArray(res, FIELDNAMES.slice(0, FIELDNAMES.length - 1));
+  prefills.push(newSpreadsheet.getUrl());
+  return createExpensesCard(prefills, 'Created and linked the spreadsheet <i>' +
+                            sheetName + '</i> for expenses!').build();
 }
