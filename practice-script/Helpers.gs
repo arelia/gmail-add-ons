@@ -32,7 +32,7 @@ function getLargestAmount(message) {
  * @returns {String}
  */
 function getReceivedDate(message) {
-  return 'TODO';
+  return message.getDate().toLocaleDateString();
 }
 
 /**
@@ -42,6 +42,7 @@ function getReceivedDate(message) {
  * @returns {String}
  */
 function getExpenseDescription(message) {
+  console.log(message)
   return 'TODO';
 }
 
